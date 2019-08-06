@@ -90,8 +90,10 @@ class App {
     this.pauseButton.disabled = false;
     this.isTimerStopped = false;
     if (this.pauseAt) {
-
+      const diff = moment(time).diff(this.pauseAt);
+      this.endAt = this.endAt.add(diff, 'millisecond');
     } else {
+      this.isTimerStopped = false;
       this.startAt = time;
       const startAtClone = moment(this.startAt);
       this.endAt = startAtClone.add(this.workLength, 'minutes');
@@ -131,6 +133,7 @@ class App {
     this.startButton.disabled = false;
     this.stopButton.disabled = true;
     this.pauseButton.disabled = true;
+    this.pauseAt = time;
     window.clearInterval(this.timerUpdater);
     this.timerUpdater = null;
   }

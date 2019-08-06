@@ -114,6 +114,7 @@ describe('updateTimer', () => {
   });
 
   test('it should switch from work to long break afte each 4 work sessions', () => {
+    document.body.innerHTML = template;
     const app = new App();
     const now = moment();
     const startOfToday = now.startOf('day');
@@ -121,6 +122,7 @@ describe('updateTimer', () => {
     app.stopButton.disabled = false;
     app.isTimerStopped = false;
     app.startAt = startOfToday;
+    app.tempCycles = 3;
     const endAt = moment(startOfToday).add(25, 'minutes');
     app.endAt = endAt;
     app.updateTimer(moment(startOfToday).add(25, 'minutes').add(100, 'millisecond'));
@@ -132,6 +134,7 @@ describe('updateTimer', () => {
 
   test('it should switch from break to start after break end', () => {
     document.body.innerHTML = template;
+    app.onWork = false;
     const app = new App();
     const now = moment();
     const startOfToday = now.startOf('day');
@@ -158,7 +161,9 @@ describe('pauseTimer', () => {
     app.isTimerStopped = false;
     app.startAt = startOfToday;
     app.endAt = moment(startOfToday).add(25, 'minutes');
-    app.pauseTimer()
+    app.pauseTimer(null, moment(startOfToday).add(15, 'minute'));
+    expect(app.startButton.disabled).not.toBeTruthy();
+    expect(app.pauseAt.valueOf()).toEqual(moment(app.startAt.add(15, 'minute')).valueOf());
 
   });
 });
